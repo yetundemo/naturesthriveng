@@ -77,7 +77,7 @@ h2{font-family:var(--serif);font-weight:600;font-size:clamp(1.9rem,4.2vw,2.8rem)
 .product{background:#fff;border:1px solid var(--line);border-top:4px solid var(--accent);border-radius:8px;display:flex;flex-direction:column;overflow:hidden;transition:box-shadow .25s,transform .25s}
 @media (hover:hover){.product:hover{box-shadow:0 16px 36px rgba(28,58,43,.14);transform:translateY(-4px)}}
 .visual{background:var(--tint);overflow:hidden}
-.visual img{width:100%;aspect-ratio:4/5;object-fit:cover;transition:transform .5s}
+.visual img{width:100%;height:auto;aspect-ratio:4/5;object-fit:cover;transition:transform .5s}
 @media (hover:hover){.product:hover .visual img{transform:scale(1.03)}}
 .pbody{padding:24px 24px 26px;display:flex;flex-direction:column;flex:1}
 .line{font-size:.92rem;font-weight:600;color:var(--accent);margin-bottom:4px}
@@ -160,12 +160,13 @@ footer .legal{width:100%;border-top:1px solid rgba(247,243,238,.14);padding-top:
 .item{display:grid;grid-template-columns:1fr auto;gap:4px 12px;padding:12px 0;border-bottom:1px solid var(--line)}
 .item b{font-weight:600;color:var(--forest)}
 .item .sub{color:var(--muted);font-size:.88rem}
-.qty{display:flex;align-items:center;gap:12px;margin-top:8px}
-.qty button{width:38px;height:38px;border-radius:50%;border:1.5px solid var(--forest);background:#fff;color:var(--forest);font-size:1.2rem;cursor:pointer;line-height:1}
-.qty button:hover{background:var(--forest);color:var(--cream)}
-.qty span{min-width:18px;text-align:center;font-weight:600}
+.qrow{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:10px}
+.qty{display:inline-flex;align-items:center;border:1.5px solid #cfc6b8;border-radius:999px;background:#fff;overflow:hidden}
+.qty button{width:42px;height:40px;border:0;background:transparent;color:var(--forest);font-size:1.3rem;cursor:pointer;line-height:1}
+.qty button:hover{background:#eef3ee}
+.qty span{min-width:32px;text-align:center;font-weight:600;color:var(--forest)}
 .line-total{font-weight:600;color:var(--forest);text-align:right}
-.rm{background:none;border:0;color:var(--terracotta);font-size:.88rem;cursor:pointer;text-decoration:underline;margin:0 0 0 auto;padding:8px 0}
+.rm{background:none;border:0;color:var(--terracotta);font-size:.9rem;cursor:pointer;text-decoration:underline;padding:10px 0}
 .totals{padding:16px 0 4px}
 .totals .row{display:flex;justify-content:space-between;padding:3px 0;gap:12px}
 .totals .grand{font-family:var(--serif);font-weight:700;font-size:1.25rem;color:var(--forest)}
@@ -204,7 +205,21 @@ form .opt:has(input:checked){border-color:var(--forest);background:#eef3ee}
   .trust div.t:nth-child(-n+2){border-top:0}
   .trust div.t:nth-child(even){padding-left:16px;border-left:1px solid #d9cfbf}
   .grid,.steps,.story .wrap{grid-template-columns:1fr}
-  .grid{gap:22px}
+  .grid{gap:16px}
+  .product{display:grid;grid-template-columns:124px 1fr;column-gap:14px;padding:14px;align-items:start}
+  .pbody{display:contents}
+  .visual{grid-column:1;grid-row:1 / span 4;border-radius:6px}
+  .line{grid-column:2;grid-row:1;margin:0;font-size:.85rem}
+  .product h3{grid-column:2;grid-row:2;font-size:1.2rem;margin:2px 0 10px}
+  .sizes{grid-column:2;grid-row:3;margin:0 0 12px;gap:6px}
+  .sizes button{padding:7px 14px;min-height:40px;font-size:.9rem}
+  .visual{align-self:start}
+  .buy{grid-column:2;grid-row:4;margin:0;align-self:end;flex-direction:column;align-items:stretch;gap:10px}
+  .price{font-size:1.3rem;display:flex;align-items:baseline;gap:8px}
+  .price small{margin:0}
+  .add{padding:12px 16px;white-space:nowrap;width:100%}
+  .product p{grid-column:1 / -1;grid-row:5;margin:16px 0 8px}
+  .notes{grid-column:1 / -1;grid-row:6;margin:0}
   .story .wrap{gap:32px}
   section{padding:60px 0}
   .mbar{display:block}
@@ -221,7 +236,6 @@ form .opt:has(input:checked){border-color:var(--forest);background:#eef3ee}
   .btn-ghost{border:0;min-height:40px;padding:6px;text-decoration:underline;text-underline-offset:4px;color:#dfe6dc}
   .arch-wrap{max-width:340px}
   .arch-wrap::before{inset:-12px 12px 0 -12px}
-  .pbody{padding:20px 20px 22px}
   .drawer{width:100%}
   .dbody{padding:16px 20px}
   .dfoot{padding-inline:20px}
@@ -508,7 +522,7 @@ function render(){
     : list.map(([k,q]) => { const {p,z} = parse(k); return `
       <div class="item">
         <div><b>${esc(p.name)}</b><div class="sub">${esc(z.label)} · ${naira(z.price)} each</div>
-          <div class="qty"><button data-dec="${k}" aria-label="Decrease quantity of ${esc(p.name)} ${esc(z.label)}">&minus;</button><span aria-live="polite">${q}</span><button data-inc="${k}" aria-label="Increase quantity of ${esc(p.name)} ${esc(z.label)}">+</button><button class="rm" data-rm="${k}">Remove</button></div></div>
+          <div class="qrow"><div class="qty"><button data-dec="${k}" aria-label="One less ${esc(p.name)} ${esc(z.label)}">&minus;</button><span aria-live="polite">${q}</span><button data-inc="${k}" aria-label="One more ${esc(p.name)} ${esc(z.label)}">+</button></div><button class="rm" data-rm="${k}">Remove</button></div></div>
         <div class="line-total">${naira(z.price*q)}</div>
       </div>`; }).join("");
   $("#sub").textContent = naira(sub);
